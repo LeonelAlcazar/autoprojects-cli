@@ -1,0 +1,30 @@
+{
+	"name": "autoprojects-cli",
+	"version": "1.0.0",
+	"description": "autoprojects-cli is a template managment system to auto generate projects",
+	"main": "dist/index.js",
+	"preferGlobal": true,
+	"bin": "dist/index.js",
+	"scripts": {
+		"prepare": "npm run build",
+		"build": "tsc",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Leonel Alcazar",
+	"license": "GNU",
+	"devDependencies": {
+		"@types/fs-extra": "^9.0.13",
+		"@types/inquirer": "^8.1.3",
+		"@types/lowdb": "^1.0.11",
+		"@types/node": "^16.11.10",
+		"@types/uuid": "^8.3.3",
+		"typescript": "^4.5.2"
+	},
+	"dependencies": {
+		"commander": "^8.3.0",
+		"fs-extra": "^10.0.0",
+		"inquirer": "^8.2.0",
+		"lowdb": "^1.0.0",
+		"uuid": "^8.3.2"
+	}
+}
