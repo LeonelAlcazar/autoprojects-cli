@@ -19,7 +19,7 @@ command
 	.action((action, name) => {
 		switch (action) {
 			case "add":
-				handleTemplateAdd();
+				handleTemplateAdd(name);
 				break;
 			case "list":
 				const templates = Template.List();
@@ -57,52 +57,47 @@ command
 		}
 	});
 
-function handleTemplateAdd() {
-	inquirer
-		.prompt([
-			{
-				type: "input",
-				name: "templateName",
-				message: "Template name:",
-				default: path.basename(process.cwd()),
-			},
-		])
-		.then(async (value) => {
-			try {
-				await TemplateController.Add(value.templateName, process.cwd());
-				console.log("Template added!");
-			} catch (e) {
-				console.log("We have an error :(, ", e);
-			}
-		})
-		.catch((e) => console.log(e));
+async function handleTemplateAdd(name?: string) {
+	try {
+		let templateName = name;
+		if (!templateName || templateName == "") {
+			const answers = await inquirer.prompt([
+				{
+					type: "input",
+					name: "name",
+					message: "Template name:",
+				},
+			]);
+			templateName = answers.name;
+		}
+
+		await TemplateController.Add(templateName, process.cwd());
+		console.log("Template added!");
+	} catch (e) {
+		console.log(e);
+	}
 }
 
-function handleNewProject(name: string) {
-	const choices = Template.List().map((template) => template.name);
-
-	inquirer
-		.prompt([
+async function handleNewProject(name: string) {
+	try {
+		const choices = Template.List().map((template) => template.name);
+		const values = await inquirer.prompt([
 			{
 				type: "list",
 				name: "template",
 				message: "What template do you will use?",
 				choices: choices,
 			},
-		])
-		.then(async (value) => {
-			try {
-				await TemplateController.Export(
-					Template.Find({ name: value.template }),
-					process.cwd(),
-					name
-				);
-				console.log("Project initied!");
-			} catch (e) {
-				throw e;
-			}
-		})
-		.catch((e) => console.log(e));
+		]);
+		await TemplateController.Export(
+			Template.Find({ name: values.template }),
+			process.cwd(),
+			name
+		);
+		console.log("Project initied!");
+	} catch (e) {
+		console.log(e);
+	}
 }
 
 command.parse(process.argv);
